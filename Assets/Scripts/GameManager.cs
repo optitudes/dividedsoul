@@ -9,8 +9,8 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        for(int i=0;i<21;i++){
-            Instantiate(Col, new Vector2(-10 + i, -2.49f), Quaternion.identity);
+        for(int i=0;i<40;i++){
+            Instantiate(Col, new Vector2(-20 + i, -2.49f), Quaternion.identity);
         }
     }
 

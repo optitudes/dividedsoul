@@ -303,6 +303,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c768f2a7c052a0448d42c14a691541a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rutina: 0
+  cronometro: 0
+  animator: {fileID: 0}
+  direccion: 0
+  speed_Walk: 0.5
+  speed_Run: 5
+  target: {fileID: 0}
+  atacando: 0
 --- !u!1 &248571913
 GameObject:
   m_ObjectHideFlags: 0
