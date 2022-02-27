@@ -12,6 +12,11 @@ public class SkeleronAI : MonoBehaviour
     public float speed_Run;
     public GameObject target;
     public bool atacando;
+    public float attackRange=0.5f;
+    public Transform attackPoint;
+    public LayerMask playerLayer;
+    public int skeletonDamage= 30;
+    public float lastAttack;
 
     // Start is called before the first frame update
     void Start()
@@ -23,10 +28,13 @@ public class SkeleronAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Comportamientos();
+        if(!animator.GetBool("dead"))
+            Comportamientos();
+
     }
     public void Comportamientos(){
 
+        if(!Attack()){
         animator.SetBool("run",false);
         cronometro += 1 * Time.deltaTime;
         if(cronometro >= 4){
@@ -48,16 +56,43 @@ public class SkeleronAI : MonoBehaviour
                     case 0:
                         transform.rotation = Quaternion.Euler(0,0,0);
                         transform.Translate(Vector3.right * speed_Walk * Time.deltaTime);
-                        //transform.position += new Vector3(1,0,0) * Time.deltaTime * speed_Walk;
                         break;
                     case 1:
                         transform.rotation = Quaternion.Euler(0,180,0);
                         transform.Translate(Vector3.right * speed_Walk * Time.deltaTime);
-                        //transform.position += new Vector3(-1,0,0) * Time.deltaTime * speed_Walk;
                         break;
                 }
                 animator.SetBool("walk",true);
                 break;
         }
+        }
+
+        
     }
+    public bool Attack()
+    {
+        Collider2D[] hitEnemies= Physics2D.OverlapCircleAll(attackPoint.position, attackRange, playerLayer);
+
+        if(hitEnemies.Length==0)
+        {
+            print("no hay nada" );
+            return false;
+
+        }else{
+            foreach(Collider2D enemy in hitEnemies){
+                if(!enemy.GetComponent<Player>().getState()){
+                    if(Time.time>=lastAttack){
+                        animator.SetTrigger("attack");
+                        enemy.GetComponent<Player>().takeDamage(skeletonDamage);
+                        print("(esqueleto) Daño hecho");
+                        lastAttack=Time.time+0.5f;
+                        return true;
+                    }
+                
+                }
+            }
+
+    }
+    return true;
+}
 }

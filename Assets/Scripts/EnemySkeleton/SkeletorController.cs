@@ -6,9 +6,9 @@ public class SkeletorController : MonoBehaviour
 {
     public GameObject Player;
 
-    private Animator  animator;
+    public Animator  animator;
 
-    private Rigidbody2D  rigidbody2D;
+    public Rigidbody2D  skeletonRB;
 
     public int maxHealth=100;
 
@@ -19,7 +19,7 @@ public class SkeletorController : MonoBehaviour
     {
         currentHealth=100;
         animator = GetComponent<Animator>();
-        rigidbody2D = GetComponent<Rigidbody2D>();
+        skeletonRB = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -36,26 +36,23 @@ public class SkeletorController : MonoBehaviour
     public void takeDamage(int damage){
         if(currentHealth>0)
         {
-        animator.SetTrigger("damaged");
-        currentHealth-= damage;
-        print("daño recibido");
+            animator.SetTrigger("damaged");
+            currentHealth-= damage;
+            print("daño recibido");
 
-        if(currentHealth<=0){
-            enemyDie();
-        }
-        }
+            if(currentHealth<=0){
+                enemyDie();
+            }
+        }          
     }
     private void enemyDie(){
         animator.SetBool("dead",true);
-        print("hola mundo");
-        //GetComponent<Collider2D>().enabled = false;
-        //Destroy(gameObject);
+
         print("enemigo eliminado");
-       
+        Destroy(skeletonRB);
+        Destroy(GetComponent<BoxCollider2D>());
         this.enabled = false;
 
     }
-    private void enemyDead(){
-        Destroy(gameObject);
-    }
+
 }
