@@ -10,28 +10,46 @@ public class SkeleronAI : MonoBehaviour
     public int direccion;
     public float speed_Walk;
     public float speed_Run;
-    public GameObject target;
     public bool atacando;
     public float attackRange=0.5f;
     public Transform attackPoint;
     public LayerMask playerLayer;
     public int skeletonDamage= 30;
     public float lastAttack;
+    public bool sleep;
+    
 
     // Start is called before the first frame update
     void Start()
     {
+        if(sleep){
+            animator.SetBool("sleepingSkeleton", true);
+        }
         animator = GetComponent<Animator>();
-        target = GameObject.Find("HeroKnight_0");
+        //target = GameObject.Find("HeroKnight_0");
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(!animator.GetBool("dead"))
+        wakingUp();
+        if(!animator.GetBool("dead") &&  animator.GetBool("wakeUp"))
             Comportamientos();
 
     }
+
+    public void wakingUp(){
+        Collider2D hitEnemies = Physics2D.OverlapCircle(gameObject.transform.position, 3f, playerLayer);
+        if(hitEnemies != null)
+            if(hitEnemies.gameObject.CompareTag("player"))
+                animator.SetBool("wakeUp", true);
+    }
+
+    private void OnDrawGizmosSelected(){
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(gameObject.transform.position, 3f);
+    }
+
     public void Comportamientos(){
 
         if(!Attack()){
@@ -69,13 +87,13 @@ public class SkeleronAI : MonoBehaviour
 
         
     }
+
     public bool Attack()
     {
         Collider2D[] hitEnemies= Physics2D.OverlapCircleAll(attackPoint.position, attackRange, playerLayer);
 
         if(hitEnemies.Length==0)
         {
-            print("no hay nada" );
             return false;
 
         }else{
@@ -83,16 +101,14 @@ public class SkeleronAI : MonoBehaviour
                 if(!enemy.GetComponent<Player>().getState()){
                     if(Time.time>=lastAttack){
                         animator.SetTrigger("attack");
-                        enemy.GetComponent<Player>().takeDamage(skeletonDamage);
+                        enemy.gameObject.SendMessage("takeDamage", skeletonDamage);
                         print("(esqueleto) Daño hecho");
                         lastAttack=Time.time+0.5f;
-                        return true;
-                    }
-                
+                    }              
                 }
             }
-
+             return true;
+        }
+       
     }
-    return true;
-}
 }

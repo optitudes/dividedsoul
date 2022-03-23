@@ -8,7 +8,7 @@ public class PlayerAttack : MonoBehaviour
     public Transform attackPoint;
     public float attackRange=0.5f;
     public LayerMask enemyLayers;
-    public int playerDamage= 30;
+    public int playerDamage = 30;
     public Rigidbody2D  playerRB;
     public Animator     animator;
 
@@ -23,7 +23,7 @@ public class PlayerAttack : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.X) && Time.time > lastAttack + 0.50f && !animator.GetBool("dead")){
             Attack1();
-            lastAttack= Time.time;
+            lastAttack = Time.time;
         }
     }
     private void Attack1(){
@@ -33,8 +33,9 @@ public class PlayerAttack : MonoBehaviour
         foreach(Collider2D enemy in hitEnemies)
         {
             if(enemy.enabled){
-            enemy.GetComponent<SkeletorController>().takeDamage(playerDamage);
-            print("Daño hecho");
+                enemy.gameObject.SendMessage("takeDamage", playerDamage);
+                //enemy.gameObject.GetComponent<SkeletorController>().takeDamage(playerDamage);
+                print("Daño hecho");
             }
         }
         

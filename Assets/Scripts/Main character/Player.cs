@@ -6,8 +6,8 @@ public class Player : MonoBehaviour
     public float         velocidad;
     public Rigidbody2D  playerRB;
     public Animator     animator;
-    public int maxHealth=100;
-    public int currentHealth=100; 
+    public int maxHealth = 100;
+    public int currentHealth = 100; 
 
     public float jumpTimeCounter;
     public float jumpTime;
@@ -16,6 +16,9 @@ public class Player : MonoBehaviour
     public Transform feetPos;
     public float checkRadius;
     public LayerMask whatIsGround;
+
+    private float lastHit = 0;
+
 
     
     // Start is called before the first frame update
@@ -30,6 +33,7 @@ public class Player : MonoBehaviour
     private void Update()
     {
         jumpManager();
+
     }
 
     private void FixedUpdate()
@@ -105,24 +109,25 @@ public class Player : MonoBehaviour
         }
     }
     public void takeDamage(int damage){
-        if(currentHealth>0 && !animator.GetBool("dead"))
+        if(currentHealth > 0 && !animator.GetBool("dead") && Time.time > lastHit + 0.6f)
         {
+            lastHit = Time.time;
             animator.SetTrigger("damaged");
-            currentHealth-= damage;
+            currentHealth -= damage;
             print("daño recibido(player)");
             if(currentHealth<=0 ){
                 playerDie();
             }
+            
         }
     }
     private void playerDie(){
         
         this.enabled = false;
         animator.SetBool("dead",true);
-        Destroy(playerRB);
-        Destroy(GetComponent<BoxCollider2D>());
         print("jugador eliminado");
-        playerRB.velocity = Vector2.up * 0; //(0,1)*0  --> new Vector2(0,0)
+        playerRB.velocity = Vector2.up * playerRB.velocity.y;
+        //(0,1)*0  --> new Vector2(0,0)
 
     }
 
