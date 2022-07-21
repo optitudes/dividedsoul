@@ -6,6 +6,7 @@ public class CameraMovement : MonoBehaviour
 {
     public GameObject player;
     public float smoothness;
+    public float yValue;
     public Vector3 offset;
     Vector3 velocity;
     public Vector3 minValues;
@@ -36,7 +37,7 @@ public class CameraMovement : MonoBehaviour
         Vector3 target = player.transform.position + offset;
         Vector3 bounds = new Vector3(
             Mathf.Clamp(target.x, minValues.x, maxValues.x),
-            Mathf.Clamp(target.y, minValues.y, maxValues.y),
+            yValue,
             Mathf.Clamp(target.z, minValues.z, maxValues.z));
         transform.position = Vector3.SmoothDamp(transform.position, bounds, ref velocity, smoothness);
     }

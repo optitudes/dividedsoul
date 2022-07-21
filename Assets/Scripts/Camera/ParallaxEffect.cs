@@ -21,7 +21,7 @@ public class ParallaxEffect : MonoBehaviour
     void Update()
     {
         parallax();
-        transform.position = new Vector3(transform.position.x, cam.transform.position.y);
+        transform.position = new Vector3(transform.position.x,transform.position.y);
     }
 
     private void parallax(){
