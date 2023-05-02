@@ -19,6 +19,11 @@ public class Player : MonoBehaviour
 
     private float lastHit = 0;
 
+    public Transform dialogPoint;
+    public float encounterRange=0.50f;
+    public LayerMask nPCLayer;
+
+
 
     
     // Start is called before the first frame update
@@ -40,6 +45,8 @@ public class Player : MonoBehaviour
     {
         if(!animator.GetBool("dead"))
             movementManager();
+        if(Input.GetKeyDown(KeyCode.E))
+            getDialog();
     }
 
     private void movementManager(){
@@ -134,6 +141,22 @@ public class Player : MonoBehaviour
     public bool getState(){
         return animator.GetBool("dead");
     }
+    private void getDialog(){
+        print("inicio dial");
 
-}
+        Collider2D[] nPCFound= Physics2D.OverlapCircleAll(dialogPoint.position, encounterRange, nPCLayer);
+        print(nPCFound.Length);
+        foreach(Collider2D nPC in nPCFound)
+        {
+            if(nPC.enabled){
+                nPC.gameObject.SendMessage("speak","Hola");
+                print("Lo puso a hablar monda");
+                break;
+            }
+        }
+
+        }
+
+        
+    }
 
